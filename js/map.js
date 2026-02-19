@@ -10,9 +10,18 @@ const MapViz = (() => {
     let worldData = null;
     let particleTimer = null;
 
-    const povertyColorScale = d3.scaleSequential()
-        .domain([0, 70])
-        .interpolator(d3.interpolateRgbBasis(["#00E676", "#66BB6A", "#FDD835", "#FF9800", "#F44336", "#B71C1C"]));
+    // Threshold-based poverty color scale with clear breakpoints
+    // Uses blended poverty index: 40% extreme + 60% moderate
+    // < 5%  → Deep Green  (very low poverty — high-income nations)
+    // 5-10% → Green       (low poverty)
+    // 10-20%→ Lime/Yellow-green (emerging middle income)
+    // 20-30%→ Yellow      (moderate poverty)
+    // 30-50%→ Orange      (high poverty)
+    // 50-70%→ Dark Orange  (very high poverty)
+    // 70%+  → Deep Red    (extreme poverty crisis)
+    const povertyColorScale = d3.scaleThreshold()
+        .domain([5, 10, 20, 30, 50, 70])
+        .range(["#00C853", "#4CAF50", "#8BC34A", "#FDD835", "#FF9800", "#F44336", "#B71C1C"]);
 
     const nodeColors = { core: "#00E5FF", regional: "#FFD740", emerging: "#FF6E40" };
     const nodeRadii = { core: 7, regional: 5.5, emerging: 4 };
@@ -138,7 +147,9 @@ const MapViz = (() => {
         if (!iso) return "#1a2332";
         const simState = Simulation.getState()[iso];
         if (!simState) return "#1a2332";
-        return povertyColorScale(simState.extremePoverty);
+        // Blended poverty index: 40% extreme + 60% moderate for fuller picture
+        const povertyIndex = simState.extremePoverty * 0.4 + simState.moderatePoverty * 0.6;
+        return povertyColorScale(povertyIndex);
     }
 
     function showTooltip(event, d) {

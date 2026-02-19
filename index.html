@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Prosperity Diffusion: 2025–2100 | Global Innovation-Led Growth Simulation</title>
-  <meta name="description" content="Interactive real-time simulation modeling the geographic diffusion of innovation-led economic growth and its impact on global poverty reduction from 2025 to 2100.">
+  <meta name="description"
+    content="Interactive real-time simulation modeling the geographic diffusion of innovation-led economic growth and its impact on global poverty reduction from 2025 to 2100.">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
 </head>
+
 <body>
 
   <!-- Loading Overlay -->
@@ -43,9 +47,30 @@
       <!-- Map -->
       <div id="map-container">
         <div class="map-legend">
-          <span>Low Poverty</span>
-          <div class="legend-gradient"></div>
-          <span>High Poverty</span>
+          <span class="legend-title">Poverty Index</span>
+          <div class="legend-stops">
+            <div class="legend-stop">
+              <div class="legend-swatch" style="background:#00C853"></div><span>&lt;5%</span>
+            </div>
+            <div class="legend-stop">
+              <div class="legend-swatch" style="background:#4CAF50"></div><span>5–10%</span>
+            </div>
+            <div class="legend-stop">
+              <div class="legend-swatch" style="background:#8BC34A"></div><span>10–20%</span>
+            </div>
+            <div class="legend-stop">
+              <div class="legend-swatch" style="background:#FDD835"></div><span>20–30%</span>
+            </div>
+            <div class="legend-stop">
+              <div class="legend-swatch" style="background:#FF9800"></div><span>30–50%</span>
+            </div>
+            <div class="legend-stop">
+              <div class="legend-swatch" style="background:#F44336"></div><span>50–70%</span>
+            </div>
+            <div class="legend-stop">
+              <div class="legend-swatch" style="background:#B71C1C"></div><span>70%+</span>
+            </div>
+          </div>
         </div>
         <div class="node-legend">
           <div class="node-legend-item">
@@ -202,4 +227,5 @@
   <script src="js/app.js"></script>
 
 </body>
+
 </html>
