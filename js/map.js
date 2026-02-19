@@ -11,17 +11,17 @@ const MapViz = (() => {
     let particleTimer = null;
 
     // Threshold-based poverty color scale with clear breakpoints
-    // Uses blended poverty index: 40% extreme + 60% moderate
-    // < 5%  → Deep Green  (very low poverty — high-income nations)
-    // 5-10% → Green       (low poverty)
-    // 10-20%→ Lime/Yellow-green (emerging middle income)
-    // 20-30%→ Yellow      (moderate poverty)
-    // 30-50%→ Orange      (high poverty)
-    // 50-70%→ Dark Orange  (very high poverty)
-    // 70%+  → Deep Red    (extreme poverty crisis)
+    // Uses TOTAL poverty (extreme + moderate) for fuller, starker picture
+    // < 3%  → Deep Green  (very low poverty — high-income nations)
+    // 3-8%  → Green       (low poverty)
+    // 8-15% → Yellow-green (emerging middle income)
+    // 15-25%→ Yellow      (moderate poverty)
+    // 25-40%→ Orange      (high poverty)
+    // 40-60%→ Red-Orange   (very high poverty)
+    // 60%+  → Deep Red    (extreme poverty crisis)
     const povertyColorScale = d3.scaleThreshold()
-        .domain([5, 10, 20, 30, 50, 70])
-        .range(["#00C853", "#4CAF50", "#8BC34A", "#FDD835", "#FF9800", "#F44336", "#B71C1C"]);
+        .domain([3, 8, 15, 25, 40, 60])
+        .range(["#00C853", "#4CAF50", "#C6CC42", "#FDD835", "#FF9800", "#F44336", "#B71C1C"]);
 
     const nodeColors = { core: "#00E5FF", regional: "#FFD740", emerging: "#FF6E40" };
     const nodeRadii = { core: 7, regional: 5.5, emerging: 4 };
@@ -147,8 +147,8 @@ const MapViz = (() => {
         if (!iso) return "#1a2332";
         const simState = Simulation.getState()[iso];
         if (!simState) return "#1a2332";
-        // Blended poverty index: 40% extreme + 60% moderate for fuller picture
-        const povertyIndex = simState.extremePoverty * 0.4 + simState.moderatePoverty * 0.6;
+        // Total poverty: extreme + moderate combined for starker, more realistic picture
+        const povertyIndex = simState.extremePoverty + simState.moderatePoverty;
         return povertyColorScale(povertyIndex);
     }
 
