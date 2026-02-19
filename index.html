@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prosperity Diffusion: 2025–2100 | Global Innovation-Led Growth Simulation</title>
+  <meta name="description" content="Interactive real-time simulation modeling the geographic diffusion of innovation-led economic growth and its impact on global poverty reduction from 2025 to 2100.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+</head>
+<body>
+
+  <!-- Loading Overlay -->
+  <div id="loading-overlay">
+    <div class="loader"></div>
+    <div class="loader-text">Initializing Simulation</div>
+  </div>
+
+  <!-- App Shell -->
+  <div id="app">
+
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="header-logo">PD</div>
+        <div>
+          <div class="header-title">Prosperity Diffusion: 2025–2100</div>
+          <div class="header-subtitle">Innovation-Led Growth & Poverty Reduction Simulation</div>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="header-year" id="year-display">2025</div>
+        <div class="header-sources">
+          Calibrated from World Bank, IMF WEO,<br>
+          UN Population Division, OECD Data
+        </div>
+      </div>
+    </header>
+
+    <!-- ── Main Content ────────────────────────────────────── -->
+    <div class="main-content">
+
+      <!-- Map -->
+      <div id="map-container">
+        <div class="map-legend">
+          <span>Low Poverty</span>
+          <div class="legend-gradient"></div>
+          <span>High Poverty</span>
+        </div>
+        <div class="node-legend">
+          <div class="node-legend-item">
+            <div class="node-legend-dot" style="background:#00E5FF"></div>
+            <span>Core Hub</span>
+          </div>
+          <div class="node-legend-item">
+            <div class="node-legend-dot" style="background:#FFD740"></div>
+            <span>Regional Hub</span>
+          </div>
+          <div class="node-legend-item">
+            <div class="node-legend-dot" style="background:#FF6E40"></div>
+            <span>Emerging Hub</span>
+          </div>
+          <div class="flow-legend" style="margin-top:4px; font-size:8px; color: var(--text-muted);">
+            Lines: diffusion intensity<br>
+            by trade, FDI, digital, migration
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Controls -->
+      <aside class="sidebar">
+
+        <!-- Scenario Selector -->
+        <div class="panel">
+          <div class="panel-title">Scenarios</div>
+          <div id="scenario-buttons"></div>
+        </div>
+
+        <!-- Adjustable Drivers -->
+        <div class="panel">
+          <div class="panel-title">Growth Drivers</div>
+          <div id="driver-sliders"></div>
+        </div>
+
+        <!-- Policy Interventions -->
+        <div class="panel">
+          <div class="panel-title">Policy Interventions</div>
+          <div id="policy-toggles"></div>
+        </div>
+
+        <!-- Regional Layers -->
+        <div class="panel">
+          <div class="panel-title">Regional Focus</div>
+          <div id="region-toggles"></div>
+        </div>
+
+        <!-- Regional Metrics Table -->
+        <div class="panel">
+          <div class="panel-title">Regional Breakdown</div>
+          <div id="regional-metrics"></div>
+        </div>
+
+      </aside>
+    </div>
+
+    <!-- ── Metrics Dashboard ───────────────────────────────── -->
+    <div class="dashboard-strip">
+
+      <div class="metric-card" id="metric-extreme-poverty">
+        <div class="metric-label">
+          <span>Extreme Poverty (&lt;$2.15/day)</span>
+          <span class="metric-trend"></span>
+        </div>
+        <div class="metric-value">—%</div>
+        <div class="metric-spark" id="extreme-poverty-spark"></div>
+      </div>
+
+      <div class="metric-card" id="metric-moderate-poverty">
+        <div class="metric-label">
+          <span>Moderate Poverty (&lt;$6.85/day)</span>
+          <span class="metric-trend"></span>
+        </div>
+        <div class="metric-value">—%</div>
+        <div class="metric-spark" id="moderate-poverty-spark"></div>
+      </div>
+
+      <div class="metric-card" id="metric-gini">
+        <div class="metric-label">
+          <span>Inequality (Gini)</span>
+          <span class="metric-trend"></span>
+        </div>
+        <div class="metric-value">—</div>
+        <div class="metric-spark" id="gini-spark"></div>
+      </div>
+
+      <div class="metric-card" id="metric-gdp-capita">
+        <div class="metric-label">
+          <span>GDP per Capita (PPP)</span>
+          <span class="metric-trend"></span>
+        </div>
+        <div class="metric-value">—</div>
+        <div class="metric-spark" id="gdp-spark"></div>
+      </div>
+
+      <div class="metric-card" id="metric-urbanization">
+        <div class="metric-label">
+          <span>Urbanization</span>
+          <span class="metric-trend"></span>
+        </div>
+        <div class="metric-value">—%</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-label">
+          <span>Structural Transformation</span>
+        </div>
+        <div id="structure-bar"></div>
+        <div id="structure-labels"></div>
+      </div>
+
+    </div>
+
+    <!-- ── Time Controls ───────────────────────────────────── -->
+    <div class="time-controls">
+      <div class="play-controls">
+        <button id="play-btn">
+          <span class="play-icon">▶</span> Play
+        </button>
+        <select id="speed-select">
+          <option value="1000">0.5×</option>
+          <option value="500" selected>1×</option>
+          <option value="250">2×</option>
+          <option value="100">5×</option>
+          <option value="40">10×</option>
+        </select>
+      </div>
+      <div class="time-slider-container">
+        <div class="time-slider-track">
+          <div id="time-progress"></div>
+          <input type="range" id="time-slider" min="2025" max="2100" value="2025" step="1">
+        </div>
+        <div class="time-labels">
+          <span>2025</span>
+          <span>2040</span>
+          <span>2060</span>
+          <span>2080</span>
+          <span>2100</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts (order matters) -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/topojson-client@3"></script>
+  <script src="js/data.js"></script>
+  <script src="js/simulation.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/controls.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
