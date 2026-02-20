@@ -127,7 +127,94 @@ const App = (() => {
     return { init };
 })();
 
+// ── Mobile Sidebar Controller ─────────────────────────────────
+const MobileSidebar = (() => {
+    let sidebar, backdrop, menuBtn, handle;
+    let isOpen = false;
+    let startY = 0;
+    let currentY = 0;
+    let isDragging = false;
+
+    function init() {
+        sidebar = document.getElementById("sidebar");
+        backdrop = document.getElementById("sidebar-backdrop");
+        menuBtn = document.getElementById("mobile-menu-btn");
+        handle = document.getElementById("sidebar-handle");
+
+        if (!sidebar || !backdrop || !menuBtn) return;
+
+        menuBtn.addEventListener("click", toggle);
+        backdrop.addEventListener("click", close);
+
+        // Swipe-to-dismiss on handle
+        if (handle) {
+            handle.addEventListener("touchstart", onTouchStart, { passive: true });
+            handle.addEventListener("touchmove", onTouchMove, { passive: false });
+            handle.addEventListener("touchend", onTouchEnd, { passive: true });
+        }
+
+        // Close on escape
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && isOpen) close();
+        });
+    }
+
+    function toggle() {
+        isOpen ? close() : open();
+    }
+
+    function open() {
+        isOpen = true;
+        sidebar.classList.add("open");
+        backdrop.classList.add("visible");
+        menuBtn.classList.add("active");
+        document.body.style.overflow = "hidden";
+    }
+
+    function close() {
+        isOpen = false;
+        sidebar.classList.remove("open");
+        backdrop.classList.remove("visible");
+        menuBtn.classList.remove("active");
+        sidebar.style.transform = "";
+        document.body.style.overflow = "";
+    }
+
+    function onTouchStart(e) {
+        if (!isOpen) return;
+        isDragging = true;
+        startY = e.touches[0].clientY;
+        currentY = startY;
+        sidebar.style.transition = "none";
+    }
+
+    function onTouchMove(e) {
+        if (!isDragging) return;
+        currentY = e.touches[0].clientY;
+        const diff = currentY - startY;
+        if (diff > 0) {
+            sidebar.style.transform = `translateY(${diff}px)`;
+            e.preventDefault();
+        }
+    }
+
+    function onTouchEnd() {
+        if (!isDragging) return;
+        isDragging = false;
+        sidebar.style.transition = "";
+        const diff = currentY - startY;
+        if (diff > 80) {
+            close();
+        } else {
+            sidebar.style.transform = "";
+        }
+    }
+
+    return { init };
+})();
+
 // ── Bootstrap ─────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
     App.init();
+    MobileSidebar.init();
 });

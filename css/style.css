@@ -931,7 +931,84 @@ body {
   animation: fadeIn 0.4s ease-out;
 }
 
+/* ── Mobile Menu Button ──────────────────────────────────── */
+.mobile-menu-btn {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  padding: 8px;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-menu-btn span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text-secondary);
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-btn.active span:nth-child(1) {
+  transform: rotate(45deg) translate(4px, 4px);
+}
+
+.mobile-menu-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.mobile-menu-btn.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(4px, -4px);
+}
+
+/* ── Sidebar Backdrop ────────────────────────────────────── */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 199;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.sidebar-backdrop.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Sidebar Handle (mobile only) ─────────────────────────── */
+.sidebar-handle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 0 4px;
+  cursor: grab;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.handle-bar {
+  width: 40px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
 /* ── Responsive ───────────────────────────────────────────── */
+
+/* Tablet */
 @media (max-width: 1024px) {
   .main-content {
     grid-template-columns: 1fr 260px;
@@ -942,21 +1019,459 @@ body {
   }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
-  .main-content {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto;
+  /* ── Body adjustments ─────────────── */
+  html, body {
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .sidebar {
-    max-height: 200px;
+  /* ── App Layout ────────────────────── */
+  #app {
+    grid-template-rows: auto 1fr auto auto;
+    height: 100vh;
+    height: 100dvh; /* dynamic viewport height for mobile browsers */
   }
 
-  .dashboard-strip {
-    grid-template-columns: repeat(2, 1fr);
+  /* ── Header ────────────────────────── */
+  .app-header {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .header-brand {
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .header-logo {
+    width: 28px;
+    height: 28px;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .header-title {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .header-subtitle {
+    font-size: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .header-year {
+    font-size: 22px;
   }
 
   .header-sources {
     display: none;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  /* ── Main Content ──────────────────── */
+  .main-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ── Map ────────────────────────────── */
+  #map-container {
+    touch-action: pan-x pan-y pinch-zoom;
+  }
+
+  .map-legend {
+    bottom: 8px;
+    left: 6px;
+    padding: 6px 8px;
+    gap: 3px;
+    max-width: calc(50vw - 10px);
+  }
+
+  .legend-title {
+    font-size: 7px;
+  }
+
+  .legend-swatch {
+    width: 14px;
+    height: 6px;
+  }
+
+  .legend-stop span {
+    font-size: 6px;
+  }
+
+  .node-legend {
+    bottom: 8px;
+    right: 6px;
+    padding: 6px 8px;
+    font-size: 8px;
+    gap: 3px;
+  }
+
+  .node-legend-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .flow-legend {
+    font-size: 7px !important;
+  }
+
+  /* ── Sidebar → Bottom Sheet Drawer ──── */
+  .sidebar-backdrop {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 70vh;
+    max-height: 70dvh;
+    z-index: 200;
+    border-left: none;
+    border-top: 1px solid var(--border-glass);
+    border-radius: 16px 16px 0 0;
+    padding: 0 16px 16px;
+    gap: 10px;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .sidebar.open {
+    transform: translateY(0);
+  }
+
+  .sidebar-handle {
+    display: flex;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--bg-glass);
+    margin: 0 -16px;
+    padding: 12px 0 8px;
+  }
+
+  /* ── Sidebar Panels on Mobile ──────── */
+  .panel {
+    padding: 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .panel-title {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  /* ── Scenario Buttons ──────────────── */
+  #scenario-buttons {
+    gap: 6px;
+  }
+
+  .scenario-btn {
+    padding: 10px 8px;
+    font-size: 11px;
+    border-radius: var(--radius-md);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Driver Sliders: Touch Friendly ── */
+  .driver-slider {
+    margin-bottom: 12px;
+  }
+
+  .driver-header {
+    margin-bottom: 6px;
+  }
+
+  .driver-icon {
+    font-size: 14px;
+  }
+
+  .driver-label {
+    font-size: 12px;
+  }
+
+  .driver-value {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .slider {
+    height: 6px;
+    margin: 4px 0;
+  }
+
+  .slider::-webkit-slider-thumb {
+    width: 22px;
+    height: 22px;
+    border: 3px solid var(--bg-primary);
+  }
+
+  .slider::-moz-range-thumb {
+    width: 22px;
+    height: 22px;
+    border: 3px solid var(--bg-primary);
+  }
+
+  /* ── Policy Toggles: Touch Friendly ── */
+  .policy-toggle {
+    margin-bottom: 4px;
+  }
+
+  .toggle-label {
+    padding: 8px 0;
+    gap: 8px;
+  }
+
+  .policy-icon {
+    font-size: 16px;
+  }
+
+  .policy-name {
+    font-size: 12px;
+  }
+
+  .toggle-switch {
+    width: 44px;
+    height: 24px;
+  }
+
+  .toggle-slider {
+    border-radius: 12px;
+  }
+
+  .toggle-slider::before {
+    width: 18px;
+    height: 18px;
+    top: 3px;
+    left: 3px;
+  }
+
+  .toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+  }
+
+  /* ── Region Toggles: Touch Friendly ── */
+  #region-toggles {
+    gap: 6px;
+  }
+
+  .region-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+    border-radius: var(--radius-md);
+    min-height: 36px;
+  }
+
+  /* ── Regional Metrics Table ────────── */
+  #regional-metrics {
+    font-size: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .regional-header,
+  .regional-row {
+    min-width: 260px;
+  }
+
+  /* ── Dashboard Strip ───────────────── */
+  .dashboard-strip {
+    display: flex;
+    gap: 8px;
+    padding: 8px 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .dashboard-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .metric-card {
+    flex: 0 0 auto;
+    min-width: 140px;
+    width: 42vw;
+    max-width: 180px;
+    scroll-snap-align: start;
+    padding: 10px 12px;
+  }
+
+  .metric-label {
+    font-size: 8px;
+  }
+
+  .metric-value {
+    font-size: 20px;
+  }
+
+  .metric-spark {
+    height: 20px;
+  }
+
+  /* ── Time Controls ─────────────────── */
+  .time-controls {
+    padding: 10px 12px;
+    gap: 10px;
+    flex-wrap: nowrap;
+  }
+
+  .play-controls {
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  #play-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+    min-height: 40px;
+    border-radius: var(--radius-md);
+  }
+
+  #speed-select {
+    padding: 6px 10px;
+    font-size: 11px;
+    min-height: 36px;
+    border-radius: var(--radius-sm);
+  }
+
+  .time-slider-container {
+    min-width: 0;
+  }
+
+  .time-slider-track {
+    height: 8px;
+  }
+
+  #time-slider {
+    height: 8px;
+  }
+
+  .time-labels {
+    font-size: 8px;
+  }
+
+  /* ── Tooltip: Mobile ───────────────── */
+  .map-tooltip {
+    max-width: 200px;
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+
+  .tooltip-title {
+    font-size: 12px;
+  }
+
+  .tooltip-grid {
+    font-size: 9px;
+    gap: 2px 8px;
+  }
+
+  /* ── Node Labels ───────────────────── */
+  .node-label {
+    font-size: 7px !important;
+  }
+}
+
+/* Very small screens (iPhone SE, etc.) */
+@media (max-width: 380px) {
+  .header-title {
+    font-size: 11px;
+  }
+
+  .header-year {
+    font-size: 18px;
+  }
+
+  .metric-card {
+    min-width: 120px;
+    width: 38vw;
+  }
+
+  .metric-value {
+    font-size: 18px;
+  }
+
+  .map-legend {
+    display: none;
+  }
+}
+
+/* Landscape mobile */
+@media (max-height: 500px) and (max-width: 900px) {
+  .app-header {
+    padding: 4px 12px;
+  }
+
+  .header-logo {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .header-title {
+    font-size: 12px;
+  }
+
+  .header-subtitle {
+    display: none;
+  }
+
+  .dashboard-strip {
+    padding: 4px 8px;
+    gap: 6px;
+  }
+
+  .metric-card {
+    padding: 6px 8px;
+    min-width: 110px;
+  }
+
+  .metric-value {
+    font-size: 16px;
+  }
+
+  .time-controls {
+    padding: 4px 12px;
+  }
+
+  #play-btn {
+    padding: 4px 10px;
+    min-height: 32px;
+    font-size: 11px;
+  }
+
+  .sidebar {
+    max-height: 60vh;
+    max-height: 60dvh;
   }
 }

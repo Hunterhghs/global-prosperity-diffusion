@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Prosperity Diffusion: 2025–2100 | Global Innovation-Led Growth Simulation</title>
   <meta name="description"
     content="Interactive real-time simulation modeling the geographic diffusion of innovation-led economic growth and its impact on global poverty reduction from 2025 to 2100.">
@@ -38,6 +38,9 @@
           Calibrated from World Bank, IMF WEO,<br>
           UN Population Division, OECD Data
         </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open controls">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </header>
 
@@ -92,8 +95,14 @@
         </div>
       </div>
 
+      <!-- Mobile Backdrop -->
+      <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
       <!-- Sidebar Controls -->
-      <aside class="sidebar">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-handle" id="sidebar-handle">
+          <div class="handle-bar"></div>
+        </div>
 
         <!-- Scenario Selector -->
         <div class="panel">
