@@ -211,8 +211,7 @@ const MapViz = (() => {
             .data(DATA.growthNodes, d => d.id);
 
         const enter = nodes.enter().append("g")
-            .attr("class", "growth-node")
-            .attr("transform", d => `translate(${projection([d.lng, d.lat])})`);
+            .attr("class", "growth-node");
 
         // Outer glow ring
         enter.append("circle")
@@ -242,8 +241,10 @@ const MapViz = (() => {
             .attr("font-family", "Inter, sans-serif")
             .text(d => d.name);
 
-        // Update
+        // Update — reposition ALL nodes using the current projection
         const all = enter.merge(nodes);
+
+        all.attr("transform", d => `translate(${projection([d.lng, d.lat])})`);
 
         all.select(".node-main")
             .transition().duration(200)
@@ -374,6 +375,9 @@ const MapViz = (() => {
         projection.scale(width / 5.5).translate([width / 2, height / 2]);
         if (worldData) {
             g.select(".countries-layer").selectAll("path").attr("d", path);
+            // Reposition nodes, flows, and region highlights with the updated projection
+            drawNodes();
+            drawFlows();
             drawRegionHighlights();
         }
     }
